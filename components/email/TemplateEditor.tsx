@@ -1,0 +1,9 @@
+"use client";
+import { useActionState } from "react";
+import { saveEmailTemplate } from "@/app/dashboard/settings/email/actions";
+import { Button } from "@/components/ui/Button";
+
+export function TemplateEditor({ templateKey, initial }: { templateKey: string; initial: { name: string; subject: string; html_body: string; text_body: string } }) {
+  const [state, action, pending] = useActionState(saveEmailTemplate, { ok: false, message: "" });
+  return <form action={action} className="space-y-4"><input type="hidden" name="template_key" value={templateKey} /><div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between"><div><h2 className="text-lg font-bold">{initial.name}</h2><p className="text-xs text-[#52636B]">{templateKey}</p></div><Button type="submit" disabled={pending}>{pending ? "Saving…" : "Save template"}</Button></div><input name="name" defaultValue={initial.name} className="w-full rounded-xl border border-[#d5e7e3] px-4 py-3" aria-label="Template name" /><input name="subject" defaultValue={initial.subject} className="w-full rounded-xl border border-[#d5e7e3] px-4 py-3" aria-label="Email subject" /><textarea name="html_body" defaultValue={initial.html_body} rows={7} className="w-full rounded-xl border border-[#d5e7e3] px-4 py-3 font-mono text-sm" aria-label="HTML body" /><textarea name="text_body" defaultValue={initial.text_body} rows={7} className="w-full rounded-xl border border-[#d5e7e3] px-4 py-3 font-mono text-sm" aria-label="Plain text body" /><p className="text-xs text-[#52636B]">Variables: {"{{business_name}}"}, {"{{client_name}}"}, {"{{invoice_number}}"}, {"{{amount}}"}, {"{{currency}}"}, {"{{due_date}}"}, {"{{payment_url}}"}, {"{{business_email}}"}</p>{state.message && <p className={`text-sm ${state.ok ? "text-[#087F78]" : "text-red-700"}`}>{state.message}</p>}</form>;
+}

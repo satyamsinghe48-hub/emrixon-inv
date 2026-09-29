@@ -1,0 +1,15 @@
+EMRIXON Invoice Chaser — P09 Security + Full QA checkpoint
+
+New/hardened files:
+- next.config.mjs
+- lib/security/validation.ts
+- lib/security/securityHeaders.ts
+- supabase/migrations/20260929040000_p09_security_qa.sql
+- supabase/migrations/20260929040100_p09_data_integrity.sql
+- scripts/p09-security-qa.mjs
+- P09-BLUEPRINT-LOCKED.md
+- P09-QA-REPORT.md
+- P09-PRODUCTION-BLOCKERS.md
+- P09-FILE-MANIFEST.txt
+
+Existing P01–P08 application source is preserved and carried forward.

@@ -1,0 +1,27 @@
+EMRIXON INVOICE CHASER — P03 FILE MANIFEST
+
+Checkpoint: EMRIXON-INV-P03
+Scope: Business workspace + Clients
+Base: P02
+
+New/updated:
+- app/dashboard/actions.ts
+- app/dashboard/page.tsx
+- app/dashboard/onboarding/page.tsx
+- app/dashboard/clients/page.tsx
+- app/dashboard/clients/new/page.tsx
+- app/dashboard/clients/[id]/page.tsx
+- app/dashboard/settings/business/page.tsx
+- components/business/BusinessForm.tsx
+- components/clients/ClientForm.tsx
+- lib/business/current.ts
+- app/globals.css (form field styles)
+
+P03 behavior:
+- Detect authenticated user's first business membership.
+- First-time users receive workspace onboarding.
+- Business create/edit settings are database-backed.
+- Client create/read/update/archive are database-backed.
+- Client list excludes archived clients.
+- Queries are scoped to the current business and remain protected by Supabase RLS.
+- No invoice automation, billing, email sending, or payment processing added.

@@ -1,0 +1,64 @@
+{
+  "checkpoint": "EMRIXON-INV-P07-LOCKED",
+  "status": "locked",
+  "purpose": "Email System v1",
+  "source": "EMRIXON-INV-P05-LOCKED",
+  "provider": "Resend",
+  "secrets": [
+    "RESEND_API_KEY",
+    "EMAIL_FROM",
+    "EMAIL_REPLY_TO"
+  ],
+  "included": [
+    "provider abstraction and Resend adapter",
+    "server-only environment validation",
+    "business sender/reply-to settings",
+    "five transactional invoice templates",
+    "approved-variable renderer with HTML escaping",
+    "HTML and plain-text email",
+    "email logs and activity UI",
+    "test email flow",
+    "manual reminder send boundary for QA",
+    "paid/cancelled protection",
+    "tenant RLS for email data",
+    "P07 worker/retry integration boundary"
+  ],
+  "excluded": [
+    "WhatsApp",
+    "SMS",
+    "AI email generation",
+    "marketing",
+    "Gmail/Outlook inbox",
+    "Stripe",
+    "accounting",
+    "advanced queue/retry worker",
+    "drag-and-drop email builder"
+  ],
+  "verification": {
+    "zip_integrity": true,
+    "secret_scan": true,
+    "p05_source_verified": true,
+    "npm_install": false,
+    "npm_build": false,
+    "reason": "Dependency network is not available in the build environment."
+  },
+  "previous_checkpoint": "EMRIXON-INV-P06-LOCKED",
+  "scope": "Automation + Failure Recovery",
+  "files_added": [
+    "features/reminders/worker/config.ts",
+    "features/reminders/worker/processJob.ts",
+    "app/api/internal/reminders/worker/route.ts",
+    "supabase/migrations/20260929020000_p07_status_enum.sql",
+    "supabase/migrations/20260929020100_p07_automation_recovery.sql",
+    "vercel.json",
+    "P07-BLUEPRINT-LOCKED.md",
+    "README-P07.md"
+  ],
+  "security_notes": [
+    "Atomic DB job claiming uses SKIP LOCKED.",
+    "Processing leases recover stale jobs.",
+    "Worker endpoint requires CRON_SECRET.",
+    "Supabase service-role key is server-only.",
+    "No demo/customer data or real secrets included."
+  ]
+}

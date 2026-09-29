@@ -1,0 +1,9 @@
+{
+  "checkpoint": "EMRIXON-INV-P08-LOCKED",
+  "phase": "P08",
+  "scope": "Billing + Plans + Feature Entitlements",
+  "source": "EMRIXON-INV-P07-LOCKED",
+  "paid_checkout": "disabled_until_provider_adapter",
+  "plans": ["free", "starter", "pro", "agency"],
+  "verification": ["zip_integrity", "secret_scan", "required_routes", "migration_structure", "provider_boundary"]
+}

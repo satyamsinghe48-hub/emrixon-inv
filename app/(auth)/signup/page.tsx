@@ -1,0 +1,2 @@
+import {AuthForm} from "@/components/auth/AuthForm"; import Link from "next/link";
+export default function Signup(){return <><h1 className="text-2xl font-bold">Create your account</h1><p className="mt-2 text-sm text-[#52636B]">Start with the Invoice Chaser foundation.</p><div className="mt-7"><AuthForm mode="signup"/></div><p className="mt-6 text-center text-sm text-[#52636B]">Already have an account? <Link href="/login" className="font-semibold text-[#087F78]">Log in</Link></p></>}
