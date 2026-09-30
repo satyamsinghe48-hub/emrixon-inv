@@ -38,7 +38,7 @@ export async function createBusiness(_prevState: { ok: boolean; message: string 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/settings/business");
   revalidatePath("/dashboard/settings/reminders");
-  return { ok: true };
+  return { ok: true, message: "Saved successfully." };
 }
 
 export async function updateBusiness(_prevState: { ok: boolean; message: string }, formData: FormData) {
@@ -73,7 +73,7 @@ export async function updateBusiness(_prevState: { ok: boolean; message: string 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/settings/business");
   revalidatePath("/dashboard/settings/reminders");
-  return { ok: true };
+  return { ok: true, message: "Saved successfully." };
 }
 
 export async function createClientRecord(_prevState: { ok: boolean; message: string }, formData: FormData) {
@@ -105,7 +105,7 @@ export async function createClientRecord(_prevState: { ok: boolean; message: str
 
   if (error) return { ok: false, message: "We could not create this client. Please try again." };
   revalidatePath("/dashboard/clients");
-  return { ok: true };
+  return { ok: true, message: "Saved successfully." };
 }
 
 export async function updateClientRecord(_prevState: { ok: boolean; message: string }, formData: FormData) {
@@ -138,22 +138,22 @@ export async function updateClientRecord(_prevState: { ok: boolean; message: str
   if (error) return { ok: false, message: "We could not save this client." };
   revalidatePath("/dashboard/clients");
   revalidatePath(`/dashboard/clients/${clientId}`);
-  return { ok: true };
+  return { ok: true, message: "Saved successfully." };
 }
 
-export async function archiveClient(formData: FormData) {
+export async function archiveClient(formData: FormData): Promise<void> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { ok: false, message: "Your session has expired. Please sign in again." };
+  if (!user) return;
   const clientId = clean(formData.get("client_id"));
   const { data: membership } = await supabase.from("business_members").select("business_id").eq("user_id", user.id).order("created_at", { ascending: true }).limit(1).maybeSingle();
   const businessId = membership?.business_id ?? "";
-  if (!clientId || !businessId) return { ok: false, message: "Client record not found." };
+  if (!clientId || !businessId) return;
 
   const { error } = await supabase.from("clients").update({ archived_at: new Date().toISOString() })
     .eq("id", clientId).eq("business_id", businessId);
-  if (error) return { ok: false, message: "We could not archive this client." };
+  if (error) return;
   revalidatePath("/dashboard/clients");
   revalidatePath(`/dashboard/clients/${clientId}`);
-  return { ok: true };
+  return;
 }

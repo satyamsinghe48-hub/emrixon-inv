@@ -31,7 +31,7 @@ for (const item of forbidden) pass(`No release artifact: ${item}`, !fs.existsSyn
 const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 pass("Candidate package version", pkg.version === "1.0.0-candidate", `version=${pkg.version}`);
 pass("P10 QA script registered", pkg.scripts?.["qa:p10"] === "node scripts/p10-release-qa.mjs");
-pass("No npm lockfile claim without file", !fs.existsSync(path.join(root, "package-lock.json")), "Lockfile is documented as a build-environment limitation.");
+pass("npm lockfile present", fs.existsSync(path.join(root, "package-lock.json")), "package-lock.json is required for reproducible dependency installation.");
 
 const secretRegex = /(sk-[A-Za-z0-9]{20,}|re_[A-Za-z0-9]{20,}|service_role.{0,4}[A-Za-z0-9_-]{20,})/i;
 const files = [];

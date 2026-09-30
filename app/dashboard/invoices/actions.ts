@@ -61,7 +61,7 @@ export async function createInvoice(_prev: InvoiceActionState, formData: FormDat
   const { data, error: insertError } = await supabase.from("invoices").insert({
     business_id: business.id,
     client_id: client.id,
-    invoice_number,
+    invoice_number: invoiceNumber,
     amount,
     currency,
     issue_date: issueDate,
@@ -111,7 +111,7 @@ export async function updateInvoice(_prev: InvoiceActionState, formData: FormDat
   if (!client) return { ok: false, message: "Selected client is not available." };
 
   const { error: updateError } = await supabase.from("invoices").update({
-    client_id: client.id, invoice_number, amount, currency, issue_date: issueDate, due_date: dueDate,
+    client_id: client.id, invoice_number: invoiceNumber, amount, currency, issue_date: issueDate, due_date: dueDate,
     payment_url: paymentUrl || null, notes: notes || null,
   }).eq("id", invoiceId).eq("business_id", business.id);
   if (updateError) {
@@ -122,11 +122,11 @@ export async function updateInvoice(_prev: InvoiceActionState, formData: FormDat
   return { ok: true, message: "Invoice saved.", id: invoiceId };
 }
 
-export async function markInvoicePaid(formData: FormData): Promise<InvoiceActionState> {
+export async function markInvoicePaid(_prev: InvoiceActionState, formData: FormData): Promise<InvoiceActionState> {
   return setInvoicePaidState(formData, true);
 }
 
-export async function markInvoiceUnpaid(formData: FormData): Promise<InvoiceActionState> {
+export async function markInvoiceUnpaid(_prev: InvoiceActionState, formData: FormData): Promise<InvoiceActionState> {
   const { supabase, business, error } = await getBusinessOrError();
   if (error || !business) return { ok: false, message: error ?? "Business workspace not found." };
   const invoiceId = clean(formData.get("invoice_id"));
@@ -156,7 +156,7 @@ async function setInvoicePaidState(formData: FormData, paid: boolean): Promise<I
   return { ok: true, message: paid ? "Invoice marked paid." : "Invoice updated.", id: invoiceId };
 }
 
-export async function cancelInvoice(formData: FormData): Promise<InvoiceActionState> {
+export async function cancelInvoice(_prev: InvoiceActionState, formData: FormData): Promise<InvoiceActionState> {
   const { supabase, business, error } = await getBusinessOrError();
   if (error || !business) return { ok: false, message: error ?? "Business workspace not found." };
   const invoiceId = clean(formData.get("invoice_id"));

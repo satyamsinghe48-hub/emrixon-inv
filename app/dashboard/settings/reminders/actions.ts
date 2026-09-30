@@ -72,18 +72,18 @@ export async function updateReminderRule(formData: FormData) {
   return { ok: true, message: "Reminder rule saved." };
 }
 
-export async function createReminderRule(formData: FormData) {
+export async function createReminderRule(formData: FormData): Promise<void> {
   const { supabase, business, error } = await workspaceContext();
-  if (error || !business) return { ok: false, message: error ?? "Business workspace not found." };
+  if (error || !business) return;
   const { planId } = await getBusinessSubscription(supabase, business.id);
-  if (!canUseCustomSchedules(planId)) return { ok: false, message: "Custom reminder schedules require Starter or higher." };
+  if (!canUseCustomSchedules(planId)) return;
 
   const name = textValue(formData.get("name"));
   const offsetDays = Number(textValue(formData.get("offset_days")));
   const offsetType = textValue(formData.get("offset_type"));
   const templateId = textValue(formData.get("template_id"));
   const parsed = reminderRuleSchema.safeParse({ name, offset_days: offsetDays, offset_type: offsetType, template_id: templateId || null, active: true });
-  if (!parsed.success || (templateId && !TEMPLATE_KEYS.has(templateId))) return { ok: false, message: "Enter valid reminder rule details." };
+  if (!parsed.success || (templateId && !TEMPLATE_KEYS.has(templateId))) return;
 
   const { error: insertError } = await supabase.from("reminder_rules").insert({
     business_id: business.id,
@@ -93,13 +93,10 @@ export async function createReminderRule(formData: FormData) {
     template_id: parsed.data.template_id || null,
     active: true,
   });
-  if (insertError) {
-    if (insertError.code === "23505") return { ok: false, message: "A reminder rule with the same name and offset already exists." };
-    return { ok: false, message: "Could not create the reminder rule." };
-  }
+  if (insertError) return;
   const { error: syncError } = await supabase.rpc("sync_business_reminder_schedules", { p_business_id: business.id });
-  if (syncError) return { ok: false, message: "Rule created, but schedules could not be refreshed. Please retry." };
+  if (syncError) return;
   revalidatePath("/dashboard/reminders");
   revalidatePath("/dashboard/settings/reminders");
-  return { ok: true, message: "Reminder rule created." };
+  return;
 }
